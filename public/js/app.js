@@ -17,11 +17,29 @@ const cpuUsageChart = new Chart(ctx, {
   data: cpuUsageData,
   options: {
     scales: {
-      y: {
-        beginAtZero: true,
-        title: {
-          display: true,
-          text: 'проценты',
+      y: { beginAtZero: true },
+      x: {
+        type: 'time',
+        time: {
+          unit: 'minute',
+          tooltipFormat: 'DD/MM/YYYY HH:mm',
+          displayFormats: {
+            minute: 'HH:mm',
+          },
+        },
+      },
+    },
+    plugins: {
+      zoom: {
+        pan: {
+          enabled: true,
+          mode: 'xy', // Позволяет панорамирование по обеим осям
+        },
+        zoom: {
+          wheel: {
+            enabled: true,
+          },
+          mode: 'xy', // Позволяет масштабирование по обеим осям
         },
       },
     },
@@ -33,9 +51,15 @@ const fetchCpuUsage = async () => {
     const response = await fetch('http://169.254.7.86:3000/api/cpu-usage');
     const data = await response.json();
 
+    // Фильтруем данные для последних 30 минут
+    const now = new Date();
+    const thirtyMinutesAgo = new Date(now.getTime() - 30 * 60000);
+
+    const filteredData = data.filter((entry) => new Date(entry.timestamp) >= thirtyMinutesAgo);
+
     // Обновите метки и данные графика
-    cpuUsageData.labels = data.map((entry) => new Date(entry.timestamp).toLocaleTimeString());
-    cpuUsageData.datasets[0].data = data.map((entry) => entry.value);
+    cpuUsageData.labels = filteredData.map((entry) => moment(entry.timestamp));
+    cpuUsageData.datasets[0].data = filteredData.map((entry) => entry.value);
 
     // Обновляем график
     cpuUsageChart.update();
