@@ -1,0 +1,32 @@
+ 
+Загрузка библиотеки Web_Clnt.dll 04.09.2024 7:55:33
+Имя исполняемого модуля Web-сервера: C:\Program Files (x86)\Kaskad\Sambar\bin\server.exe
+Имя модуля библиотеки: C:\PROGRAM FILES (X86)\KASKAD\SAMBAR\DOCS\KASKAD\WEB_CLNT.DLL
+Имя компьютера : SAIM-DMITRY
+Адрес : SAIM-DMITRY
+ 
+Начинается инициализация...
+Считываем конфигурацию из файла: C:\PROGRAM FILES (X86)\KASKAD\SAMBAR\DOCS\KASKAD\WEB_CLNT.ini
+Путь к проекту: C:\Program Files (x86)\Kaskad\Projects\KVisionDemoProject\kaskad.kpr
+Путь к исполняемым файлам SCADA-системы: C:\Program Files (x86)\Kaskad\Bin\
+Успешная загрузка C:\Program Files (x86)\Kaskad\Bin\PasspSel.dll
+Успешная загрузка C:\Program Files (x86)\Kaskad\Bin\DASrvClnt.dll
+Инициализация завершена...
+
+==================================
+ 
+Загрузка библиотеки Web_Clnt.dll 04.09.2024 8:24:57
+Имя исполняемого модуля Web-сервера: C:\Program Files (x86)\Kaskad\Sambar\bin\server.exe
+Имя модуля библиотеки: C:\PROGRAM FILES (X86)\KASKAD\SAMBAR\DOCS\KASKAD\WEB_CLNT.DLL
+Имя компьютера : SAIM-DMITRY
+Адрес : SAIM-DMITRY
+ 
+Начинается инициализация...
+Считываем конфигурацию из файла: C:\PROGRAM FILES (X86)\KASKAD\SAMBAR\DOCS\KASKAD\WEB_CLNT.ini
+Путь к проекту: C:\Program Files (x86)\Kaskad\Projects\KVisionDemoProject\kaskad.kpr
+Путь к исполняемым файлам SCADA-системы: C:\Program Files (x86)\Kaskad\Bin\
+Успешная загрузка C:\Program Files (x86)\Kaskad\Bin\PasspSel.dll
+Успешная загрузка C:\Program Files (x86)\Kaskad\Bin\DASrvClnt.dll
+Инициализация завершена...
+
+==================================
