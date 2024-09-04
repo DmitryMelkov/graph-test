@@ -39,6 +39,9 @@ const fetchCpuUsage = async () => {
   }
 };
 
+
+
+
 // Запуск функции fetchCpuUsage каждые 10 секунд
 setInterval(fetchCpuUsage, 10000);
 
