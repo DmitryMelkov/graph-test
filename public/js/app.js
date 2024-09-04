@@ -21,11 +21,16 @@ const cpuUsageChart = new Chart(ctx, {
       x: {
         type: 'time',
         time: {
-          unit: 'minute',
-          tooltipFormat: 'DD/MM/YYYY HH:mm',
+          unit: 'minute', // Используем минуту для единицы
+          stepSize: 5, // Интервал меток по 5 минут
+          tooltipFormat: 'DD/MM/YYYY HH:mm', // Формат всплывающей подсказки
           displayFormats: {
-            minute: 'HH:mm',
+            minute: 'HH:mm', // Показ меток в минутах
           },
+        },
+        ticks: {
+          // Опционально: ограничьте количество меток
+          maxTicksLimit: 10, // Максимальное количество меток
         },
       },
     },
@@ -33,13 +38,13 @@ const cpuUsageChart = new Chart(ctx, {
       zoom: {
         pan: {
           enabled: true,
-          mode: 'xy', // Позволяет панорамирование по обеим осям
+          mode: 'xy',
         },
         zoom: {
           wheel: {
             enabled: true,
           },
-          mode: 'xy', // Позволяет масштабирование по обеим осям
+          mode: 'xy',
         },
       },
     },
