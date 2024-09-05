@@ -23,7 +23,7 @@ app.use(cors()); // Разрешает CORS, чтобы ваш клиент мо
 // Функция для получения данных
 const fetchCpuUsage = async () => {
   try {
-    const response = await axios.get('http://169.254.7.86/kaskad/Web_Clnt.dll/ShowPage?public/example.html');
+    const response = await axios.get('http://169.254.6.19/kaskad/Web_Clnt.dll/ShowPage?public/example.html');
     const match = response.data.match(/<span class="content__value">\s*([\d,]+)\s*<\/span>/);
 
     if (match && match[1]) {

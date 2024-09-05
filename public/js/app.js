@@ -1,4 +1,5 @@
 const ctx = document.getElementById('cpuUsageChart').getContext('2d');
+let userNavigated = false;
 let cpuUsageData = {
   labels: [],
   datasets: [
@@ -60,7 +61,7 @@ const cpuUsageChart = new Chart(ctx, {
 
 const fetchCpuUsage = async () => {
   try {
-    const response = await fetch('http://169.254.7.86:3000/api/cpu-usage');
+    const response = await fetch('http://169.254.6.19:3000/api/cpu-usage');
     const data = await response.json();
 
     const now = new Date();
@@ -70,8 +71,10 @@ const fetchCpuUsage = async () => {
     cpuUsageData.labels = data.map((entry) => moment(entry.timestamp));
     cpuUsageData.datasets[0].data = data.map((entry) => entry.value);
 
-    cpuUsageChart.options.scales.x.min = thirtyMinutesAgo;
-    cpuUsageChart.options.scales.x.max = now;
+    if (!userNavigated) {
+      cpuUsageChart.options.scales.x.min = thirtyMinutesAgo;
+      cpuUsageChart.options.scales.x.max = now;
+    }
 
     cpuUsageChart.options.plugins.zoom.zoom.rangeMin.x = oneDayAgo;
     cpuUsageChart.options.plugins.zoom.zoom.rangeMax.x = now;
@@ -82,10 +85,9 @@ const fetchCpuUsage = async () => {
   }
 };
 
-setInterval(fetchCpuUsage, 10000);
-fetchCpuUsage();
-
+// Обработчики событий
 document.getElementById('prevBtn').addEventListener('click', () => {
+  userNavigated = true;
   const step = 30 * 60000;
 
   const min = new Date(cpuUsageChart.options.scales.x.min);
@@ -98,6 +100,7 @@ document.getElementById('prevBtn').addEventListener('click', () => {
 });
 
 document.getElementById('nextBtn').addEventListener('click', () => {
+  userNavigated = true;
   const step = 30 * 60000;
 
   const min = new Date(cpuUsageChart.options.scales.x.min);
@@ -108,3 +111,17 @@ document.getElementById('nextBtn').addEventListener('click', () => {
 
   cpuUsageChart.update();
 });
+
+document.getElementById('resetBtn').addEventListener('click', () => {
+  userNavigated = false;
+  const now = new Date();
+  const thirtyMinutesAgo = new Date(now.getTime() - 30 * 60000);
+
+  cpuUsageChart.options.scales.x.min = thirtyMinutesAgo;
+  cpuUsageChart.options.scales.x.max = now;
+
+  cpuUsageChart.update();
+});
+
+setInterval(fetchCpuUsage, 10000);
+fetchCpuUsage();
