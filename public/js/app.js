@@ -21,16 +21,17 @@ const cpuUsageChart = new Chart(ctx, {
       x: {
         type: 'time',
         time: {
-          unit: 'minute', // Используем минуту для единицы
-          stepSize: 5, // Интервал меток по 5 минут
-          tooltipFormat: 'DD/MM/YYYY HH:mm', // Формат всплывающей подсказки
+          unit: 'minute',
+          stepSize: 5,
+          tooltipFormat: 'DD/MM/YYYY HH:mm',
           displayFormats: {
-            minute: 'HH:mm', // Показ меток в минутах
+            minute: 'HH:mm',
           },
+          min: null,
+          max: null,
         },
         ticks: {
-          // Опционально: ограничьте количество меток
-          maxTicksLimit: 10, // Максимальное количество меток
+          maxTicksLimit: 10,
         },
       },
     },
@@ -38,13 +39,19 @@ const cpuUsageChart = new Chart(ctx, {
       zoom: {
         pan: {
           enabled: true,
-          mode: 'xy',
+          mode: 'x',
         },
         zoom: {
           wheel: {
             enabled: true,
           },
-          mode: 'xy',
+          mode: 'x',
+          rangeMin: {
+            x: null,
+          },
+          rangeMax: {
+            x: null,
+          },
         },
       },
     },
@@ -56,24 +63,48 @@ const fetchCpuUsage = async () => {
     const response = await fetch('http://169.254.7.86:3000/api/cpu-usage');
     const data = await response.json();
 
-    // Фильтруем данные для последних 30 минут
     const now = new Date();
     const thirtyMinutesAgo = new Date(now.getTime() - 30 * 60000);
+    const oneDayAgo = new Date(now.getTime() - 24 * 60 * 60000);
 
-    const filteredData = data.filter((entry) => new Date(entry.timestamp) >= thirtyMinutesAgo);
+    cpuUsageData.labels = data.map((entry) => moment(entry.timestamp));
+    cpuUsageData.datasets[0].data = data.map((entry) => entry.value);
 
-    // Обновите метки и данные графика
-    cpuUsageData.labels = filteredData.map((entry) => moment(entry.timestamp));
-    cpuUsageData.datasets[0].data = filteredData.map((entry) => entry.value);
+    cpuUsageChart.options.scales.x.min = thirtyMinutesAgo;
+    cpuUsageChart.options.scales.x.max = now;
 
-    // Обновляем график
+    cpuUsageChart.options.plugins.zoom.zoom.rangeMin.x = oneDayAgo;
+    cpuUsageChart.options.plugins.zoom.zoom.rangeMax.x = now;
+
     cpuUsageChart.update();
   } catch (error) {
     console.error('Ошибка при получении данных:', error);
   }
 };
 
-// Получаем данные каждые 10 секунд
 setInterval(fetchCpuUsage, 10000);
-// Первоначально загружаем данные
 fetchCpuUsage();
+
+document.getElementById('prevBtn').addEventListener('click', () => {
+  const step = 30 * 60000; // 5 минут
+
+  const min = new Date(cpuUsageChart.options.scales.x.min);
+  const max = new Date(cpuUsageChart.options.scales.x.max);
+
+  cpuUsageChart.options.scales.x.min = new Date(min.getTime() - step);
+  cpuUsageChart.options.scales.x.max = new Date(max.getTime() - step);
+
+  cpuUsageChart.update();
+});
+
+document.getElementById('nextBtn').addEventListener('click', () => {
+  const step = 30 * 60000; // 5 минут
+
+  const min = new Date(cpuUsageChart.options.scales.x.min);
+  const max = new Date(cpuUsageChart.options.scales.x.max);
+
+  cpuUsageChart.options.scales.x.min = new Date(min.getTime() + step);
+  cpuUsageChart.options.scales.x.max = new Date(max.getTime() + step);
+
+  cpuUsageChart.update();
+});
