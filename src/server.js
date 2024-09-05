@@ -38,7 +38,7 @@ const fetchCpuUsage = async () => {
     console.error('Ошибка при получении данных:', error);
   }
 };
-
+  
 // Запуск функции fetchCpuUsage каждые 10 секунд
 setInterval(fetchCpuUsage, 10000);
 
