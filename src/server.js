@@ -11,9 +11,13 @@ mongoose.connect('mongodb://localhost:27017/your_database');
 
 // Создание схемы и модели для хранения данных
 const cpuUsageSchema = new mongoose.Schema({
-  value: Number,
+  value1: Number,
+  value2: Number,
+  value3: Number,
+  value4: Number,
   timestamp: { type: Date, default: Date.now },
 });
+
 
 const CpuUsage = mongoose.model('CpuUsage', cpuUsageSchema);
 
@@ -24,21 +28,25 @@ app.use(cors()); // Разрешает CORS, чтобы ваш клиент мо
 const fetchCpuUsage = async () => {
   try {
     const response = await axios.get('http://169.254.6.19/kaskad/Web_Clnt.dll/ShowPage?public/example.html');
-    const match = response.data.match(/<span class="content__value">\s*([\d,]+)\s*<\/span>/);
+    const regexPattern = /<span class="value(\d)">\s*([\d,]+)\s*<\/span>/g;
+    const matches = [...response.data.matchAll(regexPattern)];
 
-    if (match && match[1]) {
-      const cpuValue = parseFloat(match[1].replace(',', '.'));
-      const cpuUsage = new CpuUsage({ value: cpuValue });
+    if (matches.length === 4) {
+      const values = matches.map(match => parseFloat(match[2].replace(',', '.')));
+      const [value1, value2, value3, value4] = values;
+      
+      const cpuUsage = new CpuUsage({ value1, value2, value3, value4 });
       await cpuUsage.save();
-      console.log('Сохранено в MongoDB:', cpuValue);
+      console.log('Сохранено в MongoDB:', { value1, value2, value3, value4 });
     } else {
-      console.error('Не удалось найти значение загрузки процессора в ответе.');
+      console.error('Не удалось найти все значения загрузки процессора в ответе.');
     }
   } catch (error) {
     console.error('Ошибка при получении данных:', error);
   }
 };
-  
+
+
 // Запуск функции fetchCpuUsage каждые 10 секунд
 setInterval(fetchCpuUsage, 10000);
 
