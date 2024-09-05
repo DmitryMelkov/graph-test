@@ -86,7 +86,7 @@ setInterval(fetchCpuUsage, 10000);
 fetchCpuUsage();
 
 document.getElementById('prevBtn').addEventListener('click', () => {
-  const step = 30 * 60000; // 5 минут
+  const step = 30 * 60000;
 
   const min = new Date(cpuUsageChart.options.scales.x.min);
   const max = new Date(cpuUsageChart.options.scales.x.max);
@@ -98,7 +98,7 @@ document.getElementById('prevBtn').addEventListener('click', () => {
 });
 
 document.getElementById('nextBtn').addEventListener('click', () => {
-  const step = 30 * 60000; // 5 минут
+  const step = 30 * 60000;
 
   const min = new Date(cpuUsageChart.options.scales.x.min);
   const max = new Date(cpuUsageChart.options.scales.x.max);
